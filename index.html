@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+</head>
+<body>
+<title>Топ 10 для Алины</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+  /* Layout: keynote — one idea per screen, vertical scroll with soft snapping, black stage, huge type. */
+  :root {
+    --bg: #000;
+    --fg: #f5f5f7;
+    --muted: #86868b;
+    --card: #161617;
+    --line: #2a2a2d;
+    --blue: #2997ff;
+    --gold-a: #ffd27a;
+    --gold-b: #ff9f0a;
+    --tg-in: #26232b;
+    --tg-out: #9b51f2;
+    --hot: #ff453a;
+    --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Helvetica Neue", Arial, sans-serif;
+    color-scheme: dark;
+  }
+  html { scroll-snap-type: y proximity; scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--fg); font-family: var(--font);
+    font-size: 17px; line-height: 1.47; letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  }
+  h1, h2, h3 { margin: 0; text-wrap: balance; letter-spacing: -0.035em; line-height: 1.05; }
+  p { margin: 0; }
+
+  .progress { position: fixed; inset: 0 0 auto; z-index: 20; height: calc(3px + env(safe-area-inset-top, 0px)); padding-top: env(safe-area-inset-top, 0px); background: var(--bg); }
+  .progress i { display: block; height: 3px; width: 0; background: linear-gradient(90deg, var(--blue), #bf5af2, var(--gold-b)); transition: width .15s linear; }
+
+  .slide {
+    min-height: 100vh; min-height: 100svh; scroll-snap-align: start;
+    display: grid; place-items: center;
+    padding-block: 72px;
+    padding-left: max(20px, env(safe-area-inset-left, 0px));
+    padding-right: max(20px, env(safe-area-inset-right, 0px));
+    position: relative;
+  }
+  .wrap { width: 100%; max-width: 680px; display: flex; flex-direction: column; gap: 20px; }
+  .center { text-align: center; align-items: center; }
+
+  .eyebrow { font-size: 14px; font-weight: 600; letter-spacing: 0.02em; color: var(--muted); }
+  .eyebrow.orange { color: var(--gold-b); }
+  .grad { background: linear-gradient(100deg, #5ac8fa 0%, #2997ff 30%, #bf5af2 65%, #ff6482 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .gold { background: linear-gradient(120deg, #fff3cf, var(--gold-a) 40%, var(--gold-b)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+  /* Intro */
+  .hero h1 { font-size: clamp(44px, 11vw, 96px); font-weight: 800; }
+  .hero .sub { font-size: clamp(19px, 4.6vw, 24px); color: var(--muted); max-width: 30ch; font-weight: 500; }
+  .hint { position: absolute; bottom: calc(28px + env(safe-area-inset-bottom, 0px)); left: 0; right: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--muted); font-size: 13px; }
+  .hint svg { animation: bob 1.8s ease-in-out infinite; }
+  @keyframes bob { 50% { transform: translateY(6px); } }
+
+  /* Rank slides */
+  .rank { font-size: clamp(110px, 34vw, 220px); font-weight: 800; line-height: .85; letter-spacing: -0.06em; color: transparent; -webkit-text-stroke: 2px var(--line); }
+  .rank small { font-size: .36em; -webkit-text-stroke: 1.5px var(--line); vertical-align: top; margin-right: .06em; }
+  .chip { align-self: flex-start; font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; padding: 6px 12px; border-radius: 999px; background: var(--card); color: var(--muted); border: 1px solid var(--line); }
+  .chip.fact { color: var(--blue); border-color: color-mix(in srgb, var(--blue) 40%, transparent); }
+  .item h2 { font-size: clamp(32px, 8vw, 56px); font-weight: 700; }
+  .item p.desc { font-size: clamp(18px, 4.4vw, 22px); color: var(--muted); max-width: 34ch; }
+  .item p.desc b { color: var(--fg); font-weight: 600; }
+
+  .meter { display: grid; gap: 8px; margin-top: 8px; max-width: 420px; }
+  .meter-top { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .meter-top b { color: var(--fg); font-weight: 600; }
+  .bar { height: 8px; border-radius: 99px; background: var(--card); overflow: hidden; }
+  .bar i { display: block; height: 100%; width: var(--v); border-radius: inherit; background: linear-gradient(90deg, #30d158, #ffd60a 60%, var(--gold-b)); transform-origin: left; }
+  .in .bar i { animation: grow 1.1s cubic-bezier(.2,.8,.2,1) both .2s; }
+  @keyframes grow { from { transform: scaleX(0); } }
+
+  /* Reveal (content is visible at rest; animation only plays once a slide scrolls in) */
+  .in .r { animation: rise .9s cubic-bezier(.2,.8,.2,1) both; }
+  .in .r:nth-child(2) { animation-delay: .08s; } .in .r:nth-child(3) { animation-delay: .16s; }
+  .in .r:nth-child(4) { animation-delay: .24s; } .in .r:nth-child(5) { animation-delay: .32s; }
+  .in .r:nth-child(6) { animation-delay: .40s; }
+  @keyframes rise { from { opacity: 0; transform: translateY(28px); filter: blur(6px); } }
+
+  /* Drumroll */
+  .drum h2 { font-size: clamp(36px, 9vw, 72px); font-weight: 800; }
+  .drum p { font-size: clamp(18px, 4.4vw, 22px); color: var(--muted); max-width: 32ch; }
+  .dots { display: flex; gap: 10px; }
+  .dots span { width: 10px; height: 10px; border-radius: 50%; background: var(--fg); animation: blink 1.2s infinite; }
+  .dots span:nth-child(2) { animation-delay: .2s; } .dots span:nth-child(3) { animation-delay: .4s; }
+  @keyframes blink { 0%, 100% { opacity: .2; } 40% { opacity: 1; } }
+
+  /* Number one */
+  .one .rank { -webkit-text-stroke: 0; background: linear-gradient(160deg, #fff3cf, var(--gold-a) 40%, var(--gold-b)); -webkit-background-clip: text; background-clip: text; filter: drop-shadow(0 10px 50px rgba(255,159,10,.35)); }
+  .one .rank small { -webkit-text-stroke: 0; }
+  .one .chip { color: var(--gold-a); border-color: color-mix(in srgb, var(--gold-b) 45%, transparent); background: color-mix(in srgb, var(--gold-b) 10%, var(--card)); }
+  .one h2 { font-size: clamp(30px, 7.6vw, 52px); font-weight: 700; }
+
+  .chat {
+    border-radius: 28px; padding: 22px 14px 18px; display: flex; flex-direction: column; gap: 10px;
+    background:
+      radial-gradient(circle at 20% 10%, rgba(155,81,242,.12), transparent 50%),
+      radial-gradient(circle at 90% 90%, rgba(41,151,255,.08), transparent 50%),
+      #0b0a0d;
+    border: 1px solid var(--line); box-shadow: 0 30px 80px rgba(0,0,0,.6);
+  }
+  .date-pill { align-self: center; font-size: 13px; font-weight: 600; padding: 4px 12px; border-radius: 99px; background: rgba(255,255,255,.08); color: #e5e5ea; }
+  .bubble { max-width: 84%; padding: 9px 13px 7px; font-size: 17px; line-height: 1.3; border-radius: 20px; position: relative; letter-spacing: -0.005em; }
+  .bubble .t { font-size: 11px; opacity: .6; float: right; margin: 8px 0 -4px 10px; display: inline-flex; align-items: center; gap: 3px; font-variant-numeric: tabular-nums; }
+  .b-in { align-self: flex-start; background: var(--tg-in); border-bottom-left-radius: 6px; }
+  .b-out { align-self: flex-end; background: var(--tg-out); border-bottom-right-radius: 6px; color: #fff; }
+  .typing { align-self: flex-end; background: var(--tg-out); border-radius: 20px; border-bottom-right-radius: 6px; padding: 12px 14px; display: flex; gap: 5px; }
+  .typing span { width: 7px; height: 7px; border-radius: 50%; background: #fff; animation: blink 1s infinite; }
+  .typing span:nth-child(2) { animation-delay: .15s; } .typing span:nth-child(3) { animation-delay: .3s; }
+  .typing { display: none; }
+  .play .typing { display: flex; animation: typing-life 1.9s both; }
+  .play .b-out { animation: pop .5s cubic-bezier(.3,1.5,.5,1) both 1.9s; }
+  @keyframes typing-life { 0% { opacity: 0; } 10%, 90% { opacity: 1; } 100% { opacity: 0; height: 0; padding: 0; margin: -10px 0 0; } }
+  @keyframes pop { from { opacity: 0; transform: scale(.6) translateY(12px); transform-origin: right bottom; } }
+
+  .stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .stat { background: var(--card); border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .stat b { font-size: clamp(30px, 8vw, 42px); font-weight: 700; letter-spacing: -0.04em; line-height: 1.05; font-variant-numeric: tabular-nums; }
+  .stat span { font-size: 14px; color: var(--muted); line-height: 1.35; }
+  .meter.over .bar { overflow: visible; }
+  .meter.over .bar i { width: 108%; background: linear-gradient(90deg, #ffd60a, var(--gold-b) 60%, var(--hot)); box-shadow: 0 0 24px rgba(255,69,58,.6); }
+  .meter.over .meter-top b { color: var(--hot); }
+
+  .age { text-align: center; display: grid; gap: 6px; padding: 20px; border-radius: 22px; border: 1px solid var(--line); }
+  .age .eyebrow { font-weight: 500; }
+  .age b { font-size: clamp(22px, 5.6vw, 30px); font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+
+  /* Analysis */
+  .analysis h2 { font-size: clamp(36px, 9vw, 64px); font-weight: 800; }
+  .cards { display: grid; gap: 12px; }
+  .card { background: var(--card); border-radius: 22px; padding: 20px 22px; display: grid; gap: 6px; }
+  .card h3 { font-size: 21px; font-weight: 700; letter-spacing: -0.02em; }
+  .card p { color: var(--muted); font-size: 16px; }
+  .card q { color: var(--fg); quotes: "«" "»"; }
+  .card .strike { text-decoration: line-through; text-decoration-color: var(--hot); text-decoration-thickness: 2px; color: var(--fg); }
+
+  /* Apology */
+  .sorry h2 { font-size: clamp(64px, 18vw, 150px); font-weight: 800; letter-spacing: -0.055em; }
+  .sorry p { font-size: clamp(19px, 4.6vw, 24px); color: var(--muted); max-width: 30ch; font-weight: 500; }
+  .sorry p b { color: var(--fg); font-weight: 600; }
+
+  /* Product */
+  .product h2 { font-size: clamp(42px, 11vw, 88px); font-weight: 800; }
+  .product .tag { font-size: clamp(20px, 5vw, 28px); font-weight: 600; color: var(--fg); }
+  .specs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; text-align: left; width: 100%; }
+  .spec { background: var(--card); border-radius: 22px; padding: 18px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+  .spec .k { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--blue); }
+  .spec h3 { font-size: 19px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
+  .spec p { font-size: 14px; color: var(--muted); line-height: 1.4; }
+  .chipset { width: 132px; height: 132px; border-radius: 30px; display: grid; place-items: center; position: relative;
+    background: linear-gradient(145deg, #2c2c2e, #0d0d0f); border: 1px solid #3a3a3c;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 30px 60px rgba(0,0,0,.7), 0 0 80px rgba(191,90,242,.25); }
+  .chipset::before { content: ""; position: absolute; inset: -9px; border-radius: 36px; background: repeating-linear-gradient(90deg, #48484a 0 4px, transparent 4px 13px) top/100% 5px no-repeat, repeating-linear-gradient(90deg, #48484a 0 4px, transparent 4px 13px) bottom/100% 5px no-repeat, repeating-linear-gradient(0deg, #48484a 0 4px, transparent 4px 13px) left/5px 100% no-repeat, repeating-linear-gradient(0deg, #48484a 0 4px, transparent 4px 13px) right/5px 100% no-repeat; z-index: -1; }
+  .chipset span { font-size: 15px; font-weight: 600; color: var(--muted); }
+  .chipset b { font-size: 40px; font-weight: 800; letter-spacing: -0.04em; display: block; text-align: center; line-height: 1; }
+  .price { font-size: 17px; color: var(--muted); max-width: 32ch; }
+  .price b { color: var(--fg); }
+
+  /* Final */
+  .final h2 { font-size: clamp(52px, 14vw, 112px); font-weight: 800; }
+  .arena { position: relative; width: 100%; min-height: 200px; display: flex; justify-content: center; align-items: flex-start; gap: 12px; flex-wrap: wrap; padding-top: 8px; }
+  .btn { font: 600 17px/1 var(--font); letter-spacing: -0.01em; border: 0; border-radius: 999px; padding: 16px 28px; cursor: pointer; transition: transform .2s, background .2s, left .35s cubic-bezier(.3,1.4,.5,1), top .35s cubic-bezier(.3,1.4,.5,1), font-size .2s, padding .2s; }
+  .btn:focus-visible { outline: 3px solid var(--fg); outline-offset: 3px; }
+  .btn:active { transform: scale(.96); }
+  .yes { background: var(--blue); color: #fff; box-shadow: 0 10px 30px rgba(41,151,255,.35); }
+  .no { background: var(--card); color: var(--fg); border: 1px solid var(--line); }
+  .no.fly { position: absolute; }
+  .note { font-size: 14px; color: var(--muted); min-height: 20px; }
+  .done { display: grid; gap: 14px; justify-items: center; }
+  .done h3 { font-size: clamp(30px, 8vw, 48px); font-weight: 800; }
+  .done p { font-size: 19px; color: var(--muted); max-width: 30ch; }
+  .check { width: 76px; height: 76px; border-radius: 50%; background: #30d158; display: grid; place-items: center; box-shadow: 0 0 60px rgba(48,209,88,.5); animation: pop .6s cubic-bezier(.3,1.6,.5,1) both; }
+
+  /* Footnotes */
+  .legal { padding-block: 48px calc(48px + env(safe-area-inset-bottom, 0px)); padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); border-top: 1px solid var(--line); background: #0d0d0e; }
+  .legal .wrap { gap: 10px; font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .legal ol { margin: 0; padding-left: 18px; display: grid; gap: 8px; }
+  .legal .sig { margin-top: 14px; color: var(--fg); font-size: 13px; font-weight: 600; }
+
+  #confetti { position: fixed; inset: 0; pointer-events: none; z-index: 30; width: 100%; height: 100%; }
+
+  @media (max-width: 380px) { .specs, .stats { grid-template-columns: minmax(0, 1fr); } }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .play .typing { display: none; }
+  }
+</style>
+
+<div class="progress" aria-hidden="true"><i id="progress"></i></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<main>
+  <!-- Intro -->
+  <section class="slide hero">
+    <div class="wrap center">
+      <p class="eyebrow r">Специальная презентация для Алины</p>
+      <h1 class="r">Топ 10 самых <span class="grad">тупых ситуаций</span> в мире</h1>
+      <p class="sub r">Основано на реальных событиях. Одно из них особенно реальное.</p>
+    </div>
+    <div class="hint" aria-hidden="true">
+      Листай вниз
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+  </section>
+
+  <section class="slide item">
+    <div class="wrap">
+      <div class="rank r"><small>№</small>10</div>
+      <span class="chip r">Бытовое</span>
+      <h2 class="r">Толкать дверь с надписью «на себя»</h2>
+      <p class="desc r">Три раза. С каждым разом сильнее. <b>Дверь своей позиции не изменила.</b></p>
+      <div class="meter r" style="--v:23%"><div class="meter-top"><span>Индекс тупости</span><b>23 / 100</b></div><div class="bar"><i></i></div></div>
+    </div>
+  </section>
+
+  <section class="slide item">
+    <div class="wrap">
+      <div class="rank r"><small>№</small>9</div>
+      <span class="chip r">Ресторанное</span>
+      <h2 class="r">«Приятного аппетита!» — «И вам!»</h2>
+      <p class="desc r">Официант не ел. <b>Официант запомнил.</b></p>
+      <div class="meter r" style="--v:31%"><div class="meter-top"><span>Индекс тупости</span><b>31 / 100</b></div><div class="bar"><i></i></div></div>
+    </div>
+  </section>
+
+  <section class="slide item">
+    <div class="wrap">
+      <div class="rank r"><small>№</small>8</div>
+      <span class="chip r">Технологичное</span>
+      <h2 class="r">Искать телефон, светя фонариком этого же телефона</h2>
+      <p class="desc r">Поиски продолжались четыре минуты. <b>Свет был отличный.</b></p>
+      <div class="meter r" style="--v:40%"><div class="meter-top"><span>Индекс тупости</span><b>40 / 100</b></div><div class="bar"><i></i></div></div>
+    </div>
+  </section>
+
+  <section class="slide item">
+    <div class="wrap">
+      <div class="rank r"><small>№</small>7</div>
+      <span class="chip r">Социальное</span>
+      <h2 class="r">Помахать в ответ человеку, который махал не тебе</h2>
+      <p class="desc r">Дальше только один выход: <b>сделать вид, что поправляешь волосы.</b></p>
+      <div class="meter r" style="--v:48%"><div class="meter-top"><span>Индекс тупости</span><b>48 / 100</b></div><div class="bar"><i></i></div></div>
+    </div>
+  </section>
+
+  <section class="slide item">
+    <div class="wrap">
+      <div class="rank r"><small>№</small>6</div>
+      <span class="chip r">Праздничное</span>
+      <h2 class="r">«С днём рождения!» — «Спасибо, тебя тоже!»</h2>
+      <p class="desc r">У него день рождения в марте. <b>Сейчас октябрь.</b></p>
+      <div class="meter r" style="--v:55%"><div class="meter-top"><span>Индекс тупости</span><b>55 / 100</b></div><div class="bar"><i></i></div></div>
+    </div>
+  </section>
+
+  <section class="slide item">
+    <div class="wrap">
+      <div class="rank r"><small>№</small>5</div>
+      <span class="chip fact r">Реальный факт · NASA, 1999</span>
+      <h2 class="r">Потерять космический аппарат из-за единиц измерения</h2>
+      <p class="desc r">Одна команда считала в фунтах, другая в ньютонах. <b>Mars Climate Orbiter за $125 млн</b> сгорел в атмосфере Марса.</p>
+      <div class="meter r" style="--v:63%"><div class="meter-top"><span>Индекс тупости</span><b>63 / 100</b></div><div class="bar"><i></i></div></div>
+    </div>
+  </section>
+
+  <section class="slide item">
+    <div class="wrap">
+      <div class="rank r"><small>№</small>4</div>
+      <span class="chip fact r">Реальный факт · Пиза, 1173–1372</span>
+      <h2 class="r">Строить башню 199 лет, зная, что она падает</h2>
+      <p class="desc r">Крениться она начала через пять лет после начала стройки. <b>Её всё равно достроили.</b> Теперь это туристическая жемчужина.</p>
+      <div class="meter r" style="--v:71%"><div class="meter-top"><span>Индекс тупости</span><b>71 / 100</b></div><div class="bar"><i></i></div></div>
+    </div>
+  </section>
+
+  <section class="slide item">
+    <div class="wrap">
+      <div class="rank r"><small>№</small>3</div>
+      <span class="chip fact r">Реальный факт · «Оскар», 2017</span>
+      <h2 class="r">Объявить не тот фильм лучшим фильмом года</h2>
+      <p class="desc r">Ведущим дали не тот конверт. Команда «Ла-Ла Ленда» успела <b>выйти на сцену и сказать речь.</b> Победил «Лунный свет».</p>
+      <div class="meter r" style="--v:80%"><div class="meter-top"><span>Индекс тупости</span><b>80 / 100</b></div><div class="bar"><i></i></div></div>
+    </div>
+  </section>
+
+  <section class="slide item">
+    <div class="wrap">
+      <div class="rank r"><small>№</small>2</div>
+      <span class="chip fact r">Реальный факт · 22 мая 2010</span>
+      <h2 class="r">Купить две пиццы за 10 000 биткоинов</h2>
+      <p class="desc r">Тогда это было около $41. Сегодня это <b>сотни миллионов долларов.</b> Пиццы, говорят, были вкусные.</p>
+      <div class="meter r" style="--v:92%"><div class="meter-top"><span>Индекс тупости</span><b>92 / 100</b></div><div class="bar"><i></i></div></div>
+    </div>
+  </section>
+
+  <!-- Drumroll -->
+  <section class="slide drum">
+    <div class="wrap center">
+      <div class="dots r" aria-hidden="true"><span></span><span></span><span></span></div>
+      <h2 class="r">А теперь <span class="gold">первое место.</span></h2>
+      <p class="r">Жюри совещалось два года. Биткоин-пицца даже не была в шорт-листе на победу.</p>
+    </div>
+  </section>
+
+  <!-- Number one -->
+  <section class="slide item one">
+    <div class="wrap">
+      <div class="rank r"><small>№</small>1</div>
+      <span class="chip r">Абсолютный чемпион</span>
+      <h2 class="r">Ответ Макара на простой вопрос</h2>
+
+      <div class="chat r" id="chat" role="img" aria-label="Переписка от 20 октября 2024 года. Алина: Макар, привет, можешь сказать какой нейронкой ты пользуешься? Макар: Привет, если по жизни - то нейронные связи называется">
+        <span class="date-pill">20 октября 2024</span>
+        <div class="bubble b-in">Макар, привет, можешь сказать какой нейронкой ты пользуешься?<span class="t">12:27</span></div>
+        <div class="typing" aria-hidden="true"><span></span><span></span><span></span></div>
+        <div class="bubble b-out">Привет, если по жизни - то нейронные связи называется<span class="t">12:28 <svg width="16" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5.5l3 3 6-7.5"/><path d="M7 8.5l.5.5 6-7.5"/></svg></span></div>
+      </div>
+
+      <div class="meter over r"><div class="meter-top"><span>Индекс тупости</span><b>101 / 100</b></div><div class="bar"><i></i></div></div>
+
+      <div class="stats r">
+        <div class="stat"><b>1 мин</b><span>на обдумывание. Достаточно, чтобы передумать.</span></div>
+        <div class="stat"><b>0</b><span>нейронок названо в ответе на вопрос про нейронку</span></div>
+        <div class="stat"><b>1</b><span>ошибка в согласовании. «Связи называется».</span></div>
+        <div class="stat"><b>∞</b><span>раз этот ответ будет вспоминаться</span></div>
+      </div>
+
+      <div class="age r">
+        <span class="eyebrow">Этот ответ живёт в истории уже</span>
+        <b id="age">2 года</b>
+      </div>
+    </div>
+  </section>
+
+  <!-- Analysis -->
+  <section class="slide analysis">
+    <div class="wrap">
+      <p class="eyebrow r">Разбор экспертов</p>
+      <h2 class="r">Что пошло <span class="grad">не так.</span></h2>
+      <div class="cards">
+        <div class="card r"><h3>Не тот раздел учебника</h3><p>Вопрос был про нейросеть. Ответ получился про анатомию.</p></div>
+        <div class="card r"><h3>«По жизни»</h3><p>Добавлено для солидности. Солидности не прибавило.</p></div>
+        <div class="card r"><h3>Связи <span class="strike">называется</span> называются</h3><p>Связей много, а «называется» в единственном числе. Подлежащее и сказуемое так и не помирились.</p></div>
+        <div class="card r"><h3>Две галочки</h3><p>12:28. Прочитано. Изменить нельзя. Можно только жить с этим.</p></div>
+        <div class="card r"><h3>Правильный ответ</h3><p>Занимал одно слово. Например, <q>ChatGPT</q>.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Apology -->
+  <section class="slide sorry">
+    <div class="wrap center">
+      <p class="eyebrow r">Официальное заявление</p>
+      <h2 class="r">Алина,<br><span class="grad">прости.</span></h2>
+      <p class="r">Прости, что на нормальный вопрос ты получила ответ уровня <b>статуса ВКонтакте 2012 года.</b></p>
+      <p class="r">Тогда я думал, что это смешно. Прошло два года, и это правда стало смешно. Получается, я был прав, просто слишком рано.</p>
+    </div>
+  </section>
+
+  <!-- Product -->
+  <section class="slide product">
+    <div class="wrap center">
+      <div class="chipset r" aria-hidden="true"><div><span>чип</span><b>N2</b></div></div>
+      <p class="eyebrow orange r">Новинка</p>
+      <h2 class="r">Макар <span class="grad">Pro</span></h2>
+      <p class="tag r">Думает. Отвечает. На заданный вопрос.</p>
+      <div class="specs r">
+        <div class="spec"><span class="k">Нейронка</span><h3>Встроенная</h3><p>Знает, что такое ChatGPT, и больше не стесняется это сказать.</p></div>
+        <div class="spec"><span class="k">Грамматика 2.0</span><h3>Связи называются</h3><p>Множественное число включено по умолчанию.</p></div>
+        <div class="spec" style="grid-column:1 / -1"><span class="k">Режим «по жизни»</span><h3>Отключён</h3><p>Можно включить в настройках. Не нужно.</p></div>
+      </div>
+      <p class="price r">Цена: <b>одно «ладно, прощаю».</b> Доступно только для Алины.</p>
+    </div>
+  </section>
+
+  <!-- Final -->
+  <section class="slide final">
+    <div class="wrap center">
+      <h2 class="r">Простишь?</h2>
+      <div id="ask" class="wrap center" style="gap:12px">
+        <div class="arena" id="arena">
+          <button class="btn yes" id="yes" type="button">Прощаю</button>
+          <button class="btn no" id="no" type="button">Нет</button>
+        </div>
+        <p class="note" id="note" aria-live="polite"></p>
+      </div>
+      <div class="done" id="done" hidden>
+        <div class="check" aria-hidden="true"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+        <h3>Обновление установлено.</h3>
+        <p>Макар Pro активирован. Нейронные связи благодарят тебя. Все связи. Во множественном числе.</p>
+        <p>Спасибо, что смеёшься над моими шутками. Даже над этой. Особенно над этой.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="legal">
+  <div class="wrap">
+    <ol>
+      <li>Все ситуации в рейтинге реальны или хотя бы раз случались с кем-то из знакомых.</li>
+      <li>Mars Climate Orbiter: NASA, 23 сентября 1999. Пицца за биткоины: Ласло Ханеч, 22 мая 2010. Ошибка с конвертом: 89-я церемония «Оскар», 26 февраля 2017.</li>
+      <li>Индекс тупости рассчитан независимым жюри из одного человека. Этот человек занял первое место.</li>
+      <li>При создании презентации ни одна нейросеть не пострадала. Пострадала только грамматика, и то два года назад.</li>
+    </ol>  </div>
+</footer>
+
+<script>
+(function () {
+  var tg = null;
+  // Inside a Telegram Mini App, load Telegram's SDK for full-screen mode and haptics.
+  if (/tgWebApp/.test(location.hash + location.search)) {
+    var s = document.createElement('script');
+    s.src = 'https://telegram.org/js/telegram-web-app.js';
+    s.onload = function () {
+      tg = window.Telegram && window.Telegram.WebApp;
+      if (!tg) return;
+      try { tg.ready(); tg.expand(); tg.setHeaderColor('#000000'); tg.setBackgroundColor('#000000'); } catch (e) {}
+    };
+    document.head.appendChild(s);
+  }
+  function buzz(kind) {
+    try {
+      if (tg && tg.HapticFeedback) {
+        if (kind === 'success') tg.HapticFeedback.notificationOccurred('success');
+        else tg.HapticFeedback.impactOccurred(kind || 'light');
+      } else if (navigator.vibrate) navigator.vibrate(kind === 'success' ? [20, 40, 20] : 12);
+    } catch (e) {}
+  }
+
+  // Progress bar
+  var bar = document.getElementById('progress');
+  function onScroll() {
+    var h = document.documentElement.scrollHeight - innerHeight;
+    bar.style.width = (h > 0 ? (scrollY / h) * 100 : 0) + '%';
+  }
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  // Play each slide's entrance once, when it scrolls in
+  var chat = document.getElementById('chat');
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('in');
+        if (e.target.contains(chat)) { chat.classList.add('play'); setTimeout(function () { buzz('medium'); }, 1900); }
+        io.unobserve(e.target);
+      });
+    }, { threshold: 0.25 });
+    document.querySelectorAll('.slide').forEach(function (s, i) { if (i > 0) io.observe(s); });
+  }
+
+  // How long the answer has existed (sent 20 Oct 2024, 12:28 Moscow time)
+  var sent = new Date('2024-10-20T12:28:00+03:00');
+  var ageEl = document.getElementById('age');
+  function plural(n, a, b, c) {
+    var m10 = n % 10, m100 = n % 100;
+    if (m10 === 1 && m100 !== 11) return n + ' ' + a;
+    if (m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) return n + ' ' + b;
+    return n + ' ' + c;
+  }
+  function tick() {
+    var now = new Date();
+    var y = now.getFullYear() - sent.getFullYear();
+    var anchor = new Date(sent); anchor.setFullYear(sent.getFullYear() + y);
+    if (anchor > now) { y--; anchor.setFullYear(sent.getFullYear() + y); }
+    var ms = now - anchor;
+    var d = Math.floor(ms / 864e5), h = Math.floor(ms / 36e5) % 24, mi = Math.floor(ms / 6e4) % 60, se = Math.floor(ms / 1e3) % 60;
+    var parts = [];
+    if (y > 0) parts.push(plural(y, 'год', 'года', 'лет'));
+    parts.push(plural(d, 'день', 'дня', 'дней'));
+    parts.push(plural(h, 'час', 'часа', 'часов'));
+    parts.push(plural(mi, 'минуту', 'минуты', 'минут'));
+    parts.push(plural(se, 'секунду', 'секунды', 'секунд'));
+    ageEl.textContent = parts.join(' ');
+  }
+  tick(); setInterval(tick, 1000);
+
+  // The "No" button refuses to be pressed
+  var no = document.getElementById('no'), yes = document.getElementById('yes');
+  var arena = document.getElementById('arena'), note = document.getElementById('note');
+  var lines = ['Точно?', 'Подумай ещё', 'Алина…', 'Ну пожалуйста', 'Это ошибка', 'Кнопка устала'];
+  var notes = ['', 'Кнопка «Нет» временно недоступна.', 'Попробуй другую кнопку. Она синяя.', 'Нейронные связи не дают нажать.', 'Почти. Но нет.', 'Кнопка «Нет» уходит в отпуск.'];
+  var tries = 0;
+  function dodge(ev) {
+    if (ev) ev.preventDefault();
+    buzz('light');
+    tries++;
+    if (tries > lines.length) {
+      no.hidden = true;
+      note.textContent = 'Кнопка «Нет» ушла думать нейронными связями. Осталась одна.';
+      yes.style.fontSize = '21px'; yes.style.padding = '20px 40px';
+      return;
+    }
+    no.textContent = lines[tries - 1];
+    note.textContent = notes[tries - 1];
+    var aw = arena.clientWidth, ah = arena.clientHeight;
+    no.classList.add('fly');
+    var bw = no.offsetWidth, bh = no.offsetHeight;
+    no.style.left = Math.max(0, Math.random() * (aw - bw)) + 'px';
+    no.style.top = Math.max(70, Math.random() * (ah - bh)) + 'px';
+    var grow = 17 + tries * 1.5;
+    yes.style.fontSize = grow + 'px';
+    yes.style.padding = (16 + tries * 1.5) + 'px ' + (28 + tries * 3) + 'px';
+  }
+  no.addEventListener('click', dodge);
+  no.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') dodge(e); });
+
+  yes.addEventListener('click', function () {
+    buzz('success');
+    document.getElementById('ask').hidden = true;
+    document.getElementById('done').hidden = false;
+    confetti();
+  });
+
+  // Confetti
+  var cv = document.getElementById('confetti'), ctx = cv.getContext('2d');
+  function confetti() {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var dpr = Math.min(devicePixelRatio || 1, 2);
+    cv.width = innerWidth * dpr; cv.height = innerHeight * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var colors = ['#2997ff', '#bf5af2', '#ff6482', '#ffd27a', '#30d158', '#5ac8fa', '#f5f5f7'];
+    var ps = [];
+    for (var i = 0; i < 180; i++) {
+      ps.push({
+        x: innerWidth / 2 + (Math.random() - .5) * 80, y: innerHeight * .55,
+        vx: (Math.random() - .5) * 14, vy: -Math.random() * 16 - 6,
+        w: 6 + Math.random() * 6, h: 8 + Math.random() * 10,
+        r: Math.random() * 6, vr: (Math.random() - .5) * .4,
+        c: colors[i % colors.length]
+      });
+    }
+    var start = performance.now();
+    (function frame(t) {
+      ctx.clearRect(0, 0, innerWidth, innerHeight);
+      ps.forEach(function (p) {
+        p.vy += .38; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r);
+        ctx.fillStyle = p.c; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h * Math.abs(Math.cos(p.r * 2)));
+        ctx.restore();
+      });
+      if (t - start < 4000) requestAnimationFrame(frame); else ctx.clearRect(0, 0, innerWidth, innerHeight);
+    })(start);
+  }
+})();
+</script>
+
+</body>
+</html>
